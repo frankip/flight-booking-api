@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 flask-restful = "*"
 flask-api = "*"
+django = "*"
+djangorestframework = "*"
 
 [dev-packages]
 

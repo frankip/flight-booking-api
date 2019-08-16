@@ -8,6 +8,7 @@ flask-restful = "*"
 flask-api = "*"
 django = "*"
 djangorestframework = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
 

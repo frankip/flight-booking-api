@@ -1,16 +1,22 @@
 from rest_framework import serializers
-from flight.models import Tickets
+from flight.models import FlightTickets
 
 
-class FlightSerializer(serializers.ModelSerializer):
+class FlightTicketSerializer(serializers.HyperlinkedModelSerializer):
+    # url = serializers.HyperlinkedIdentityField(
+    #     view_name='FlightTicketList',
+    # )
+
     class Meta:
-        model = Tickets
-        fields = (
+        model = FlightTickets
+        fields = [
+            'url',
             'id',
-            'ticket_number',
-            'flight_number',
+            'passenger',
+            'origin',
             'destination',
-            'flight_time',
-            'ticket_holder',
+            'flight_number',
+            'time',
+            'seat_number',
             'status'
-        )
+        ]

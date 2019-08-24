@@ -9,6 +9,9 @@ flask-api = "*"
 django = "*"
 djangorestframework = "*"
 "psycopg2-binary" = "*"
+django-rest-auth = "*"
+django-rest-framework = "*"
+django-allauth = "*"
 
 [dev-packages]
 

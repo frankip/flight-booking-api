@@ -8,5 +8,10 @@ urlpatterns = [
     path('tickets', views.FlightTicketList.as_view(),
     name=views.FlightTicketList.name),
     path('tickets/<int:pk>/', views.FlightTicketDetail.as_view(),
-    name=views.FlightTicketDetail.name)
+    name=views.FlightTicketDetail.name),
+
+    path('profile', views.UserProfileView.as_view(),
+    name=views.UserProfileView.name),
+    path('profile/<int:pk>/', views.UserProfileView.as_view(),
+    name=views.UserProfileView.name),
 ]

@@ -1,11 +1,10 @@
 from rest_framework import serializers
-from flight.models import FlightTickets
+from flight.models import FlightTickets, UserProfile
+
+from rest_auth.serializers import UserDetailsSerializer
 
 
 class FlightTicketSerializer(serializers.HyperlinkedModelSerializer):
-    # url = serializers.HyperlinkedIdentityField(
-    #     view_name='FlightTicketList',
-    # )
 
     class Meta:
         model = FlightTickets
@@ -20,3 +19,14 @@ class FlightTicketSerializer(serializers.HyperlinkedModelSerializer):
             'seat_number',
             'status'
         ]
+
+
+class UserProfileSerializer(UserDetailsSerializer):
+    user = UserDetailsSerializer()
+
+
+    class Meta:
+        model = UserProfile
+        # fields = ['user', 'phone_number', 'bio', 'location', 'birth_date']
+        fields = '__all__'
+        # exclude = ('user', )

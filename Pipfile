@@ -12,6 +12,7 @@ djangorestframework = "*"
 django-rest-auth = "*"
 django-rest-framework = "*"
 django-allauth = "*"
+cloudinary = "*"
 
 [dev-packages]
 

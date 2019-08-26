@@ -51,6 +51,9 @@ INSTALLED_APPS = [
 
     # Flight Api
     'flight.apps.FlightConfig',
+
+    # Third party API
+    'cloudinary'
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -111,6 +114,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.FileUploadParser'
     ]
 }
 ACCOUNT_LOGOUT_ON_GET = True

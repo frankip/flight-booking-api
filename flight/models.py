@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from cloudinary.models import CloudinaryField
+
 # Create your models here.
 
 
@@ -47,9 +49,13 @@ class UserProfile(models.Model):
         return self.user
 
 
-class PassportImage(models.Model):
-    image_url = models.CharField(max_length=30, blank=True)
+class Image(models.Model):
+    # image_url = models.CharField(max_length=30, blank=True)
+    image = CloudinaryField('image')
+
         # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.image
 
 
 class FlightBooking(models.Model):

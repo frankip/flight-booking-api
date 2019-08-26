@@ -19,4 +19,8 @@ urlpatterns = [
     name=views.FlightBookingList.name),
     path('booking/<int:pk>/', views.FlightBookingDetail.as_view(),
     name=views.FlightBookingDetail.name),
+
+    path('upload/', views.FileUploadView.as_view(),
+    name=views.FileUploadView.name),
+
 ]

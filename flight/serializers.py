@@ -1,8 +1,11 @@
 from rest_framework import serializers
+from cloudinary.templatetags import cloudinary
+
 from flight.models import (
     Flight, 
     UserProfile,
-    FlightBooking
+    FlightBooking,
+    Image
     )
 
 from rest_auth.serializers import UserDetailsSerializer
@@ -28,7 +31,7 @@ class FlightSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserProfileSerializer(UserDetailsSerializer):
-    user = UserDetailsSerializer()
+    user = UserDetailsSerializer(read_only=True)
 
     class Meta:
         model = UserProfile
@@ -47,3 +50,20 @@ class FlightBookingSerializer(serializers.HyperlinkedModelSerializer):
 class FlightBookingDetailSerializer(FlightBookingSerializer):
 
     flight = FlightSerializer(read_only=True)
+
+class FileUploadSerializer(serializers.Serializer):
+    # I set use_url to False so I don't need to pass file 
+    # through the url itself - defaults to True if you need it
+    image = serializers.FileField(use_url=False)
+
+    class Meta:
+        model = Image
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super(FileUploadSerializer, self).to_representation(instance)
+        imageUrl = cloudinary.utils.cloudinary_url(
+            instance.image, width=100, height=150, crop='fill')
+
+        representation['image'] = imageUrl[0]
+        return representation

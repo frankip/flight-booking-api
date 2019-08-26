@@ -5,13 +5,18 @@ urlpatterns = [
     path('', views.ApiRoot.as_view(),
     name=views.ApiRoot.name),
 
-    path('tickets', views.FlightTicketList.as_view(),
-    name=views.FlightTicketList.name),
-    path('tickets/<int:pk>/', views.FlightTicketDetail.as_view(),
-    name=views.FlightTicketDetail.name),
+    path('flights', views.FlightList.as_view(),
+    name=views.FlightList.name),
+    path('flights/<int:pk>/', views.FlightDetail.as_view(),
+    name=views.FlightDetail.name),
 
     path('profile', views.UserProfileView.as_view(),
     name=views.UserProfileView.name),
     path('profile/<int:pk>/', views.UserProfileView.as_view(),
     name=views.UserProfileView.name),
+
+    path('booking', views.FlightBookingList.as_view(),
+    name=views.FlightBookingList.name),
+    path('booking/<int:pk>/', views.FlightBookingDetail.as_view(),
+    name=views.FlightBookingDetail.name),
 ]

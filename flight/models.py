@@ -6,28 +6,28 @@ from django.dispatch import receiver
 # Create your models here.
 
 
-class FlightTickets(models.Model):
-    RESERVED = 'Reserved'
+class Flight(models.Model):
+    BOOKED = 'Booked'
     AVAILABLE = 'Available'
     TICKET_STATUS = [
-         (RESERVED, 'Reserved'),
+         (BOOKED, 'Booked'),
          (AVAILABLE, 'Available'),
     ]
-    passenger = models.CharField(max_length=200, blank=True, verbose_name='Name Of Pasenger')
+    name = models.CharField(max_length=200, blank=True, verbose_name='Name Of flight')
     origin = models.CharField(max_length=200, blank=True, verbose_name='From')
-    flight_number = models.IntegerField(blank=True, default='')
     destination = models.CharField(max_length=200, blank=True, default='')
     status = models.CharField(
         max_length=10,
         choices=TICKET_STATUS,
         default=AVAILABLE,
     )
-    time = models.DateTimeField(verbose_name='Date of depature')
-    seat_number = models.IntegerField(blank=True, default='')
+    date = models.DateField(verbose_name='Date of depature')
+    time = models.TimeField(verbose_name='Time of depature')
+    # bookings = models.ForeignKey('FlightBooking', related_name='booking', on_delete=models.CASCADE, blank=True,)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.passenger
+        return self.name
 
 
 class UserProfile(models.Model):
@@ -50,3 +50,11 @@ class UserProfile(models.Model):
 class PassportImage(models.Model):
     image_url = models.CharField(max_length=30, blank=True)
         # user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class FlightBooking(models.Model):
+    booking_date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    flight = models.ForeignKey('Flight', on_delete=models.CASCADE)
+    number_of_tickets = models.IntegerField(default=1)
+    ticket_type = models.CharField(max_length=30, default='economy')

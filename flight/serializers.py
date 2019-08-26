@@ -51,7 +51,7 @@ class FlightBookingDetailSerializer(FlightBookingSerializer):
 
     flight = FlightSerializer(read_only=True)
 
-class FileUploadSerializer(serializers.Serializer):
+class FileUploadSerializer(serializers.ModelSerializer):
     # I set use_url to False so I don't need to pass file 
     # through the url itself - defaults to True if you need it
     image = serializers.FileField(use_url=False)
@@ -59,6 +59,8 @@ class FileUploadSerializer(serializers.Serializer):
     class Meta:
         model = Image
         fields = '__all__'
+
+
 
     def to_representation(self, instance):
         representation = super(FileUploadSerializer, self).to_representation(instance)

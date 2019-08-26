@@ -1,5 +1,5 @@
 from django.contrib import admin
-from flight.models import Flight, UserProfile, FlightBooking
+from flight.models import Flight, UserProfile, FlightBooking, Image
 
 
 class FlightAdmin(admin.ModelAdmin):
@@ -15,4 +15,5 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(Flight, FlightAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
-admin.site.register(FlightBooking) 
+admin.site.register(FlightBooking)
+admin.site.register(Image)

@@ -1,13 +1,15 @@
 from random import randint
 from rest_framework.reverse import reverse
-from rest_framework import generics, mixins
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import permissions, parsers
-from django.views.generic import View
 from rest_framework import status
 
 from rest_auth import views
 from cloudinary.templatetags import cloudinary
+import cloudinary.uploader
+# from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
 
 from flight.serializers import (
     FlightSerializer, 
@@ -78,61 +80,49 @@ class FileUploadView(views.APIView):
 
     def get(self, request, format=None):
         images = Image.objects.all()
-        serializer = FileUploadSerializer(images, many=True)
+        serializer = FileUploadSerializer()
         return Response({'images': serializer.data}, status=status.HTTP_200_OK)
 
-    def upload_image_cloudinary(self, request, image_name):
-        print('popin---->>>>', request.FILES['image'])
-        cloudinary.uploader.upload(
-            cloudinary.config( 
-                cloud_name = "francky", 
-                api_key = "XfqzOSKfgU3cNz2OafXz6o4-M8o", 
-                api_secret = "XfqzOSKfgU3cNz2OafXz6o4-M8o1" 
-                ),
-            request.FILES['image'],
-            public_id=image_name,
-            tags=['image_ad', 'NAPI']
-        )
-        print('popin---->>>>2', image_name)
-
     def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            try:
-                imageName = 'passport_v{0}'.format(randint(0, 100))
-                self.upload_image_cloudinary(request, imageName)
-                serializer.save(image_ad=imageName)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            except Exception:
-                return Response({'image': 'Please upload a valid image'}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            print(serializer)
-            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-    # def post(self, request, filename, format=None):
-    #     serializer = FileUploadSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     file_obj = request.data['file']
+        file_name = request.FILES['image']
+        imageName = 'passport_v{0}'.format(randint(0, 100))
+        resp = cloudinary.uploader.upload(file_name)
 
-    #     print('----------->>', file_obj)
+        url, options = cloudinary_url(
+            resp['public_id'],
+            format=resp['format'],
+            width=200,
+            height=150,
+            crop="scale",
+        )
 
-    #     # ...
-    #     # do some stuff with uploaded file
-    #     # ...
-    #     return Response(status=204)
+        print("scaling to 200x150 url: " + url)
+        # serializer.save()
+        return Response(data=resp, status=status.HTTP_201_CREATED)
 
+    # def post(self, request, format=None):
+    #     serializer = FileUploadSerializer(data=request.FILES)
+    #     print('>>>>>>>>>', serializer)
+    #     if serializer.is_valid():
+    #         file_name = request.FILES['image']
+    #         imageName = 'passport_v{0}'.format(randint(0, 100))
+    #         response = cloudinary.uploader.upload(file_name)
 
-    # def put(self, request, filename, format=None):
-    #     serializer = FileUploadSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     file_obj = request.data['file']
+    #         url, options = cloudinary_url(
+    #             response['public_id'],
+    #             format=response['format'],
+    #             width=200,
+    #             height=150,
+    #             crop="scale",
+    #         )
 
-    #     print('----------->>', file_obj)
-
-    #     # ...
-    #     # do some stuff with uploaded file
-        # ...
-        return Response(status=204)
+    #         # print("scaling to 200x150 url: " + url)
+    #         serializer.save(image=url, options=options)
+    #         # def create(self, validated_data):
+    #         #     return Image.objects.create(**response)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ApiRoot(generics.GenericAPIView):
@@ -146,3 +136,7 @@ class ApiRoot(generics.GenericAPIView):
             'profile': reverse(UserProfileView.name, request=request),
             'booking': reverse(FlightBookingList.name, request=request),
             })
+
+
+
+# Everything working okay isipokuwa the uploading image, tumefuata tukafika apo kwa call back za cloudinary tukakwamia apao

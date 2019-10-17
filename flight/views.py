@@ -1,4 +1,5 @@
 from random import randint
+import pprint
 from rest_framework.reverse import reverse
 from rest_framework import generics
 from rest_framework.response import Response
@@ -84,10 +85,11 @@ class FileUploadView(views.APIView):
         return Response({'images': serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-
-        file_name = request.FILES['image']
+        images = Image.objects.all()
+        serializer = FileUploadSerializer(data=request.FILES)
+        file_name = request.FILES.get('image')
         imageName = 'passport_v{0}'.format(randint(0, 100))
-        resp = cloudinary.uploader.upload(file_name)
+        resp = cloudinary.uploader.upload(file_name, public_id=imageName)
 
         url, options = cloudinary_url(
             resp['public_id'],
@@ -97,9 +99,19 @@ class FileUploadView(views.APIView):
             crop="scale",
         )
 
-        print("scaling to 200x150 url: " + url)
-        # serializer.save()
-        return Response(data=resp, status=status.HTTP_201_CREATED)
+        # print("url------->1 " + url)
+
+        # serializer = FileUploadSerializer(data=request.FILES)
+        
+        print("url------->0 ",serializer.is_valid())
+        # return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if serializer.is_valid():
+            
+            images.save(image=url)
+            pprint.pprint(serializer.image)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print("url------->2 ", url)    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # def post(self, request, format=None):
     #     serializer = FileUploadSerializer(data=request.FILES)

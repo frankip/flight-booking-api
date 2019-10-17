@@ -10,7 +10,7 @@ from flight.models import (
 
 from rest_auth.serializers import UserDetailsSerializer
 
-
+import pprint
 class FlightSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -61,11 +61,13 @@ class FileUploadSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
     def to_representation(self, instance):
-        representation = super(FileUploadSerializer, self).to_representation(instance)
+        # representation = super(FileUploadSerializer, self).to_representation(instance)
+        representation = super().to_representation(instance)
+        pprint.pprint(instance.get('image').name)
         imageUrl = cloudinary.utils.cloudinary_url(
-            instance.image, width=100, height=150, crop='fill')
+            repr(instance.get('image').name))
 
+        # pprint.pprint(imageUrl)
         representation['image'] = imageUrl[0]
         return representation
